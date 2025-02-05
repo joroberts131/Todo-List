@@ -1,10 +1,8 @@
-<script setup>
-const msg = 'Todo App';
+<script>
+  const message = `Hello Vue.js!`;
 </script>
 
 <template>
-  <h1 style="text-align: center;">
-    {{ msg }}
-  </h1>
+  <h1>{{message}}</h1>
 </template>
 
