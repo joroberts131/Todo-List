@@ -1,13 +1,24 @@
 <script setup>
   import { ref } from 'vue'
-  const msg = ref('Hello World!')
+  const msg = ref('')
   const list = ref([1,2,3,4,5])
   function addToList(str) {
-    list.value.push(str)
-    msg.value = ''
+    console.log(str.value)
+    if(str == ""){
+      list.value.push(Math.floor(Math.random() * 100000))
+    }else{
+      list.value.push(str)
+      msg.value = ''
+    }
   }
-  function removeFromList() {
+  function removeFromList(str) {
     list.value.pop()
+  }
+  function finish(item){
+    index = list.value.indexOf(item)
+    console.log(index + " " + item + " test")
+    list.value = list(list.indexOf(item)).value + ' (done)'
+    
   }
 </script>
 
@@ -16,18 +27,26 @@
     <h1>To-Do app</h1>
     <p></p>
     <div class = "container">
-      <input class = "box" type="text" v-model="msg">
+      <input placeholder="Enter Task Here..." class = "box" type="text" v-model="msg">
       <p>{{ msg }}</p>
-      <button class = "add" @click="addToList(msg)">Add to list</button>
-      <button @click="removeFromList()">Pop</button>
+      <button class = "click" @click="addToList(msg)">Add to list</button>
+      <button @click="removeFromList(msg)">Pop</button>
     </div>
+    
     <ul>
-      <li v-for="item in list">{{item}}</li>
+      <li v-for="item in list">
+        {{item}} 
+        <button class = "click" @click="removeFromList(item)">x</button>
+        <input type = "checkbox" @change="finish(item)">
+      </li>  
     </ul>
   </body>
 </template>
 
 <style>
+  ::placeholder{
+    color: #5f2d2c;
+  }
   .box {
     width: 20%;
     height: 25px;
@@ -36,6 +55,7 @@
     padding: 10px;
     margin-bottom: 10px;
     background-color: #c1715f;
+    font-size: 20px;
     
   }
   .container {
@@ -48,7 +68,7 @@
   body {
     background-color: tan;
   }
-  .add {
+  .click {
     margin: auto;
     background-color: #c1715f;
   }
