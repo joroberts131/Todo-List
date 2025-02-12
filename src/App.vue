@@ -2,8 +2,12 @@
   import { ref } from 'vue'
   const msg = ref('')
   const list = ref([1,2,3,4,5])
+  let listSave = localStorage.setItem("list", JSON.stringify(list.value))
+  list.value = JSON.parse(localStorage.getItem("list"))
   function addToList(str) {
-    console.log(str.value)
+    listSave = localStorage.setItem("list", JSON.stringify(list.value))
+    console.log("Data saved! " + JSON.parse(localStorage.getItem("list")))
+    console.log(str)
     if(str == ""){
       list.value.push(Math.floor(Math.random() * 100000))
     }else{
@@ -11,13 +15,20 @@
       msg.value = ''
     }
   }
-  function removeFromList(str) {
-    list.value.pop()
+  function removeFromList(item) {
+    listSave = localStorage.setItem("list", JSON.stringify(list.value))
+    let index = list.value.indexOf(item)
+    list.value.splice(index, 1)
   }
   function finish(item){
-    index = list.value.indexOf(item)
+    let index = list.value.indexOf(item)
+    let str = item.toString()
     console.log(index + " " + item + " test")
-    list.value = list(list.indexOf(item)).value + ' (done)'
+    if(str.startsWith("Done: ")){
+      list.value.splice(index, 1, str.slice(6))
+    }else{
+      list.value.splice(index, 1, "Done: " + str)
+    }
     
   }
 </script>
@@ -30,12 +41,11 @@
       <input placeholder="Enter Task Here..." class = "box" type="text" v-model="msg">
       <p>{{ msg }}</p>
       <button class = "click" @click="addToList(msg)">Add to list</button>
-      <button @click="removeFromList(msg)">Pop</button>
     </div>
     
     <ul>
       <li v-for="item in list">
-        {{item}} 
+        {{item}}
         <button class = "click" @click="removeFromList(item)">x</button>
         <input type = "checkbox" @change="finish(item)">
       </li>  
@@ -58,6 +68,10 @@
     font-size: 20px;
     
   }
+  .done {
+    text-decoration: line-through;
+  }
+  
   .container {
     display: flex;
     flex-direction: column;
