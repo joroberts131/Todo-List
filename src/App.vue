@@ -1,11 +1,14 @@
 <script setup>
   import { ref } from 'vue'
   const msg = ref('')
-  const list = ref([1,2,3,4,5])
-  let listSave = localStorage.setItem("list", JSON.stringify(list.value))
-  list.value = JSON.parse(localStorage.getItem("list"))
+  const list = ref([])
+  
+  // Load saved list from localStorage or use default if none exists
+  const savedList = localStorage.getItem("list")
+  list.value = savedList ? JSON.parse(savedList) : [1,2,3,4,5]
+  
   function addToList(str) {
-    listSave = localStorage.setItem("list", JSON.stringify(list.value))
+    localStorage.setItem("list", JSON.stringify(list.value))
     console.log("Data saved! " + JSON.parse(localStorage.getItem("list")))
     console.log(str)
     if(str == ""){
@@ -16,20 +19,19 @@
     }
   }
   function removeFromList(item) {
-    listSave = localStorage.setItem("list", JSON.stringify(list.value))
     let index = list.value.indexOf(item)
     list.value.splice(index, 1)
+    localStorage.setItem("list", JSON.stringify(list.value))
   }
   function finish(item){
     let index = list.value.indexOf(item)
     let str = item.toString()
-    console.log(index + " " + item + " test")
     if(str.startsWith("Done: ")){
       list.value.splice(index, 1, str.slice(6))
     }else{
       list.value.splice(index, 1, "Done: " + str)
     }
-    
+    localStorage.setItem("list", JSON.stringify(list.value))
   }
 </script>
 
